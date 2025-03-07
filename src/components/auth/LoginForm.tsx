@@ -13,6 +13,7 @@ interface LoginFormData {
 
 export const LoginForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const { setAuth, checkAuth } = useAuthStore();
@@ -25,6 +26,8 @@ export const LoginForm: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
+    setError('');
+    
     try {
       const response = await authApi.login(data);
       
@@ -44,28 +47,16 @@ export const LoginForm: React.FC = () => {
       const from = location.state?.from?.pathname || '/jobs';
       navigate(from, { replace: true });
     } catch (error: any) {
-      console.error('Login Error:', error);
+      console.error('Login submission error:', error);
       
-      let errorMessage = 'Login failed. Please try again.';
-      
-      if (error.response?.status === 401) {
-        errorMessage = 'Invalid email or password';
-      } else if (error.response?.status === 400) {
-        errorMessage = error.response.data.message || 'Please enter valid credentials';
-      } else if (error.response?.status === 429) {
-        errorMessage = 'Too many attempts. Please try again later.';
-      } else if (error.message) {
-        errorMessage = error.message;
+      // Handle different types of errors with user-friendly messages
+      if (error.message.includes('Server error')) {
+        setError('Our server is currently experiencing issues. Please try again later.');
+      } else if (error.message.includes('internet connection')) {
+        setError('Unable to connect to the server. Please check your internet connection.');
+      } else {
+        setError(error.message || 'Failed to log in. Please check your credentials.');
       }
-
-      toast.error(errorMessage, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
     } finally {
       setIsLoading(false);
     }
@@ -122,6 +113,12 @@ export const LoginForm: React.FC = () => {
             </p>
           )}
         </div>
+
+        {error && (
+          <p className="mt-1 text-sm text-red-600">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
