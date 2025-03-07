@@ -8,6 +8,13 @@ interface JobCardProps {
   isRecommended?: boolean;
 }
 
+const getCompanyName = (company: string | { name?: string, companyName?: string }) => {
+  if (typeof company === 'string') {
+    return company;
+  }
+  return company.name || company.companyName || 'Unknown Company';
+};
+
 export const JobCard: React.FC<JobCardProps> = ({ job, isRecommended }) => {
   return (
     <Link
@@ -29,18 +36,20 @@ export const JobCard: React.FC<JobCardProps> = ({ job, isRecommended }) => {
             </h3>
             <p className="text-sm text-gray-600 mb-2 flex items-center">
               <BriefcaseIcon className="h-4 w-4 mr-1 text-gray-400" />
-              {job.company}
+              {getCompanyName(job.company)}
             </p>
           </div>
           {job.logo ? (
             <img 
               src={job.logo} 
-              alt={`${job.company} logo`} 
+              alt={`${getCompanyName(job.company)} logo`} 
               className="h-10 w-10 object-contain rounded-md bg-white border border-gray-100"
             />
           ) : (
             <div className="h-10 w-10 rounded-md bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
-              {job.company.charAt(0)}
+              {typeof job.company === 'string' 
+                ? job.company.charAt(0)
+                : (job.company.name?.charAt(0) || job.company.companyName?.charAt(0) || 'C')}
             </div>
           )}
         </div>

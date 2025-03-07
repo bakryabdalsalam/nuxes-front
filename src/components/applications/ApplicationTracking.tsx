@@ -1,13 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { applicationApi } from '../../services/api';
 import { Application } from '../../types';
-
-const statusColors = {
-  PENDING: 'bg-yellow-100 text-yellow-800',
-  REVIEWING: 'bg-blue-100 text-blue-800',
-  ACCEPTED: 'bg-green-100 text-green-800',
-  REJECTED: 'bg-red-100 text-red-800'
-};
+import { formatCompanyName, formatDate, statusColors } from '../../utils/formatters';
 
 export const ApplicationTracking = () => {
   const { data: applications, isLoading } = useQuery({
@@ -24,13 +18,13 @@ export const ApplicationTracking = () => {
           <div className="flex justify-between items-start">
             <div>
               <h3 className="text-lg font-medium text-gray-900">
-                {application.job.title}
+                {application.job?.title || 'Unknown Job'}
               </h3>
               <p className="mt-1 text-sm text-gray-500">
-                {application.job.company}
+                {formatCompanyName(application.job?.company)}
               </p>
             </div>
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors[application.status]}`}>
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${statusColors[application.status] || 'bg-gray-100 text-gray-800'}`}>
               {application.status}
             </span>
           </div>
@@ -56,7 +50,7 @@ export const ApplicationTracking = () => {
             <div>
               <dt className="text-sm font-medium text-gray-500">Last updated</dt>
               <dd className="mt-1 text-sm text-gray-900">
-                {new Date(application.updatedAt).toLocaleDateString()}
+                {formatDate(application.updatedAt)}
               </dd>
             </div>
           </dl>

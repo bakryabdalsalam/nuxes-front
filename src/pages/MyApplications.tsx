@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { applicationApi } from '../services/api';
 import { Application, ApiResponse } from '../types';
+import { formatCompanyName } from '../utils/formatters';
 
 export const MyApplications: React.FC = () => {
   const { data: response, isLoading, error } = useQuery<ApiResponse<Application[]>>({
@@ -44,8 +45,8 @@ export const MyApplications: React.FC = () => {
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-xl font-semibold">{application.job.title}</h2>
-                  <p className="text-gray-600">{application.job.company}</p>
+                  <h2 className="text-xl font-semibold">{application.job?.title || 'Unknown Job'}</h2>
+                  <p className="text-gray-600">{formatCompanyName(application.job?.company)}</p>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium
                   ${application.status === 'ACCEPTED' ? 'bg-green-100 text-green-800' :
@@ -86,4 +87,4 @@ export const MyApplications: React.FC = () => {
       )}
     </div>
   );
-}; 
+};

@@ -101,18 +101,28 @@ const JobForm: React.FC = () => {
     try {
       setLoading(true);
       
-      // Filter out empty requirements and benefits
+      // Filter out empty requirements and benefits and format salary
       const cleanedData = {
         ...formData,
         requirements: formData.requirements.filter(req => req.trim()),
-        benefits: formData.benefits.filter(ben => ben.trim())
+        benefits: formData.benefits.filter(ben => ben.trim()),
+      };
+
+      // For API calls, adapt the data with proper salary format
+      const apiData = {
+        ...cleanedData,
+        salary: formData.salary ? {
+          min: Number(formData.salary),
+          max: Number(formData.salary),
+          currency: 'USD'
+        } : undefined
       };
 
       if (id) {
-        await companyApi.updateJob(id, cleanedData);
+        await companyApi.updateJob(id, apiData);
         toast.success('Job updated successfully');
       } else {
-        await companyApi.createJob(cleanedData);
+        await companyApi.createJob(apiData as any); // Type assertion to avoid TS error
         toast.success('Job created successfully');
       }
       

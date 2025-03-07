@@ -2,8 +2,15 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { jobsApi } from '../../services/api';
 import { JobCard } from './JobCard';
-import { Job } from '../../types';
 import { SparklesIcon } from '@heroicons/react/24/outline';
+import { Job as JobType } from '../../types';
+
+// Create a local type that extends the Job type with optional postedDate
+type RecommendationJob = Omit<JobType, 'postedDate'> & {
+  postedDate?: string;
+  // Add id to ensure it's always available
+  id: string;
+};
 
 export const JobRecommendations: React.FC = () => {
   const { data: response, isLoading, error } = useQuery({
@@ -66,10 +73,13 @@ export const JobRecommendations: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {recommendations.map((job: Job) => (
+        {recommendations.map((job: RecommendationJob) => (
           <JobCard 
             key={job.id} 
-            job={job} 
+            job={{
+              ...job,
+              postedDate: job.postedDate || job.createdAt || new Date().toISOString()
+            }} 
             isRecommended 
           />
         ))}

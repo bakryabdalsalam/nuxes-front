@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +23,11 @@ export const RegisterForm = () => {
 
     try {
       console.log('Registering user...', { email: data.email, name: data.name });
-      await registerUser(data.email, data.password, data.name);
+      await registerUser({
+        email: data.email,
+        password: data.password,
+        name: data.name
+      });
       toast.success('Registration successful!');
       navigate('/dashboard');
     } catch (error: any) {

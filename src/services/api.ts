@@ -1,9 +1,63 @@
 /// <reference types="vite/client" />
 
 import axios from 'axios';
-import { Job, PaginatedResponse, Application, ApplicationStatus, User } from '../types';
 import { toast } from 'react-toastify';
-import { useAuthStore } from '../store/auth.store';
+
+// Define the interfaces directly in this file to avoid circular dependencies
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  isActive?: boolean;
+  profile?: any;
+}
+
+interface Job {
+  id: string;
+  title: string;
+  description: string;
+  company: any;
+  location: string;
+  salary?: any;
+  employmentType: string;
+  experienceLevel: string;
+  category: string;
+  status: string;
+  remote?: boolean;
+  requirements?: string[];
+  benefits?: string[];
+  createdAt?: string;
+  _count?: {
+    applications: number;
+  };
+}
+
+interface Application {
+  id: string;
+  user?: User;
+  job?: Job;
+  status: ApplicationStatus;
+  coverLetter?: string;
+  resume?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+type ApplicationStatus = 'PENDING' | 'REVIEWING' | 'ACCEPTED' | 'REJECTED' | 'SHORTLISTED';
+
+// Either remove the unused interface or export it for future use
+// This lets TypeScript know it's intentional
+export interface PaginatedResponse<T> {
+  success: boolean;
+  data: T;
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -11,9 +65,9 @@ export interface ApiResponse<T = any> {
   data?: T;
 }
 
-export interface AuthResponse extends ApiResponse<User> {
+export interface AuthResponse {
   success: boolean;
-  user?: User;  // Add user property to match backend response
+  message?: string;
   data?: {
     user?: User;
     token?: string;

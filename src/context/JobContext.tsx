@@ -1,5 +1,20 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Job, JobFilters } from '../types';
+import { Job } from '../types';
+
+// Define JobFilters directly here or import from types
+interface JobFilters {
+  search?: string;
+  location?: string;
+  category?: string;
+  experienceLevel?: string;
+  employmentType?: string;
+  remote?: boolean;
+  salary?: {
+    min?: number;
+    max?: number;
+  };
+  keyword?: string;
+}
 
 interface JobContextType {
   jobs: Job[];

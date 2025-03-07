@@ -76,14 +76,14 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     >
       {children || (
         <>
-          {navigator.share ? (
+          {navigator.share && typeof navigator.share === 'function' ? (
             <ShareIcon className={`${size === 'sm' ? 'h-3.5 w-3.5' : size === 'lg' ? 'h-5 w-5' : 'h-4 w-4'} ${size !== 'sm' ? 'mr-2' : 'mr-1.5'}`} />
           ) : copied ? (
             <CheckIcon className={`${size === 'sm' ? 'h-3.5 w-3.5' : size === 'lg' ? 'h-5 w-5' : 'h-4 w-4'} ${size !== 'sm' ? 'mr-2' : 'mr-1.5'} text-green-500`} />
           ) : (
             <DocumentDuplicateIcon className={`${size === 'sm' ? 'h-3.5 w-3.5' : size === 'lg' ? 'h-5 w-5' : 'h-4 w-4'} ${size !== 'sm' ? 'mr-2' : 'mr-1.5'}`} />
           )}
-          {copied ? 'Copied!' : navigator.share ? 'Share' : 'Copy Link'}
+          {copied ? 'Copied!' : (navigator.share && typeof navigator.share === 'function') ? 'Share' : 'Copy Link'}
         </>
       )}
     </button>

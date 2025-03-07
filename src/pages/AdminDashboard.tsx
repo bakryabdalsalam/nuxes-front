@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { adminApi, applicationApi } from '../services/api';
+import { adminApi } from '../services/api';
 
 interface DashboardStats {
   totalUsers: number;

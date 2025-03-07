@@ -5,6 +5,7 @@ import { Job } from '../../types';
 import { toast } from 'react-toastify';
 import { Dialog } from '@headlessui/react';
 import { useForm } from 'react-hook-form';
+import { formatCompanyName } from '../../utils/formatters';
 
 interface JobFormData {
   title: string;
@@ -77,14 +78,24 @@ export const JobTable: React.FC = () => {
 
   const handleEdit = (job: Job) => {
     setEditingJob(job);
+    
+    // Format job data for the form
+    const formCompany = typeof job.company === 'object' 
+      ? formatCompanyName(job.company) // Convert object to string
+      : job.company;
+      
+    const formSalary = typeof job.salary === 'object'
+      ? job.salary.min || job.salary.max || 0 // Use min or max or default to 0
+      : (job.salary || 0);
+    
     reset({
       title: job.title,
       description: job.description,
-      company: job.company,
+      company: formCompany,
       location: job.location,
       experienceLevel: job.experienceLevel,
       category: job.category,
-      salary: job.salary || 0
+      salary: formSalary
     });
     setIsModalOpen(true);
   };
@@ -93,7 +104,12 @@ export const JobTable: React.FC = () => {
     // Convert salary to number for API submission
     const formattedData = {
       ...data,
-      salary: data.salary ? Number(data.salary) : null
+      company: data.company, // Use form data instead of job
+      salary: data.salary ? {
+        min: data.salary,
+        max: data.salary,
+        currency: 'USD'
+      } : undefined
     };
 
     if (editingJob) {
@@ -170,8 +186,8 @@ export const JobTable: React.FC = () => {
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
                           {job.title}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {job.company}
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                          {formatCompanyName(job.company)}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {job.location}

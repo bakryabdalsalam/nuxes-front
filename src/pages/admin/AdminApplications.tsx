@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { adminApi, applicationApi } from '../../services/api';
+import { applicationApi } from '../../services/api';
 import { Application, ApplicationStatus } from '../../types';
 
 const AdminApplications: React.FC = () => {
@@ -75,14 +75,16 @@ const AdminApplications: React.FC = () => {
               {applications.map((application) => (
                 <tr key={application.id} className="border-t">
                   <td className="px-4 py-2">
-                    <div className="font-medium">{application.user.name}</div>
-                    <div className="text-sm text-gray-500">{application.user.email}</div>
+                    <div className="font-medium">{application.user?.name || 'Unknown User'}</div>
+                    <div className="text-sm text-gray-500">{application.user?.email || 'No email'}</div>
                   </td>
-                  <td className="px-4 py-2">{application.job.title}</td>
+                  <td className="px-4 py-2">{application.job?.title || 'Unknown Position'}</td>
                   <td className="px-4 py-2">
-                    {application.job.company && 'companyName' in application.job.company 
-                      ? application.job.company.companyName 
-                      : 'N/A'}
+                    {application.job?.company ? (
+                      typeof application.job.company === 'string' 
+                        ? application.job.company 
+                        : (application.job.company.companyName || application.job.company.name || 'N/A')
+                    ) : 'N/A'}
                   </td>
                   <td className="px-4 py-2">
                     <span

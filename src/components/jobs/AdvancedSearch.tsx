@@ -21,13 +21,15 @@ type SearchFormData = z.infer<typeof searchSchema>;
 
 interface Props {
   onSearch: (filters: SearchFormData) => void;
+  initialValues?: SearchFormData;
 }
 
-export const AdvancedSearch = ({ onSearch }: Props) => {
+export const AdvancedSearch: React.FC<Props> = ({ onSearch, initialValues = {} }) => {
   const { register, handleSubmit, watch, setValue } = useForm<SearchFormData>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
-      remote: false
+      remote: false,
+      ...initialValues
     }
   });
 

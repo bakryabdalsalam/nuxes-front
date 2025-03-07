@@ -30,7 +30,7 @@ export const UserProfile = () => {
   const updateMutation = useMutation({
     mutationFn: userApi.updateProfile,
     onSuccess: () => {
-      queryClient.invalidateQueries(['userProfile']);
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       toast.success('Profile updated successfully');
     }
   });

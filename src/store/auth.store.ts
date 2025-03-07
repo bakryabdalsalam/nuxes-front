@@ -97,11 +97,11 @@ export const useAuthStore = create<AuthState>()(
             return false;
           }
 
-          const response = await authApi.getProfile();
+          const response = await authApi.me();
           
           if (response?.data) {
             set({ 
-              user: response.data,
+              user: response.data as User, // Add type assertion
               token,
               isAuthenticated: true,
               isLoading: false

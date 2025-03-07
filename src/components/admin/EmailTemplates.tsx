@@ -15,7 +15,7 @@ const templateSchema = z.object({
 type TemplateFormData = z.infer<typeof templateSchema>;
 
 export const EmailTemplates = () => {
-  const { data: templates, isLoading } = useQuery({
+  const { data: templates } = useQuery({
     queryKey: ['email-templates'],
     queryFn: adminApi.getEmailTemplates
   });
@@ -67,7 +67,7 @@ export const EmailTemplates = () => {
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-md font-medium mb-4">Existing Templates</h3>
           <div className="space-y-4">
-            {templates?.map(template => (
+            {templates?.map((template: any) => (
               <div key={template.id} className="border p-4 rounded-md">
                 <h4 className="font-medium">{template.name}</h4>
                 <p className="text-sm text-gray-500">{template.subject}</p>

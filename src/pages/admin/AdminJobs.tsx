@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { adminApi } from '../../services/api';
 import { Job } from '../../types';
+import { formatCompanyName, formatDate } from '../../utils/formatters';
 
 const AdminJobs: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -62,11 +63,11 @@ const AdminJobs: React.FC = () => {
                   <td className="px-4 py-2">
                     <div className="font-medium">{job.title}</div>
                   </td>
-                  <td className="px-4 py-2">{job.company}</td>
+                  <td className="px-4 py-2">{formatCompanyName(job.company)}</td>
                   <td className="px-4 py-2">{job.location}</td>
                   <td className="px-4 py-2">{job._count?.applications || 0}</td>
                   <td className="px-4 py-2">
-                    {new Date(job.createdAt).toLocaleDateString()}
+                    {formatDate(job.createdAt)}
                   </td>
                   <td className="px-4 py-2">
                     <button

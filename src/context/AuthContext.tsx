@@ -18,6 +18,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isLoading?: boolean; // Add this line to make the property optional
   login: (email: string, password: string) => Promise<void>;
   register: (data: { email: string; password: string; name: string; role?: string }) => Promise<void>;
   logout: () => Promise<void>;
@@ -235,7 +236,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, checkAuth }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading, 
+      isLoading: loading, // Add this line
+      login, 
+      register, 
+      logout, 
+      checkAuth 
+    }}>
       {children}
     </AuthContext.Provider>
   );

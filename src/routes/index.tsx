@@ -11,7 +11,6 @@ import JobDetails from '../pages/JobDetails';
 import JobApplicationForm from '../components/forms/JobApplicationForm';
 import UserProfileForm from '../components/forms/UserProfileForm';
 import CompanyProfileForm from '../components/forms/CompanyProfileForm';
-import JobPostForm from '../components/forms/JobPostForm';
 import Unauthorized from '../pages/Unauthorized';
 import ErrorBoundary from '../components/common/ErrorBoundary';
 import JobForm from '../components/jobs/JobForm';

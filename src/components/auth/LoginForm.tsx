@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { authApi } from '../../services/api';
 import { useAuthStore } from '../../store/auth.store';
 import { toast } from 'react-toastify';
+import { User } from '../../types';
 
 interface LoginFormData {
   email: string;
@@ -27,8 +28,12 @@ export const LoginForm: React.FC = () => {
     try {
       const response = await authApi.login(data);
       
-      const { user, token } = response.data;
-      setAuth(user, token);
+      if (response.data && response.data.user && response.data.token) {
+        // Cast the user data to ensure role is properly typed
+        const userData = response.data.user as User;
+        const authToken = response.data.token;
+        setAuth(userData, authToken);
+      }
       
       // Verify auth state after login
       await checkAuth();

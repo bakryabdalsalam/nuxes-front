@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useAuthStore } from '../store/auth.store';
 import { Link } from 'react-router-dom';
 import { 
@@ -13,24 +13,28 @@ import { useQuery } from '@tanstack/react-query';
 import { applicationApi, jobsApi } from '../services/api';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
+
 export const Dashboard: React.FC = () => {
   const user = useAuthStore(state => state.user);
   
   // Get user applications count
   const { data: applications, isLoading: applicationsLoading } = useQuery({
     queryKey: ['applications-count'],
-    queryFn: () => applicationApi.getApplications(),
+    queryFn: () => applicationApi.getUserApplications(),
     enabled: !!user,
   });
   
   // Get recommended jobs
   const { data: recommendedJobs, isLoading: jobsLoading } = useQuery({
     queryKey: ['recommended-jobs'],
-    queryFn: () => jobsApi.getRecommendedJobs(3),
+    queryFn: () => jobsApi.getJobs(1, { category: 'recommended' }),
     enabled: !!user,
   });
   
   const appliedCount = applications?.data?.length || 0;
+  const hasRecommendedJobs = recommendedJobs?.data?.jobs && 
+                            Array.isArray(recommendedJobs.data.jobs) && 
+                            recommendedJobs.data.jobs.length > 0;
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -141,9 +145,9 @@ export const Dashboard: React.FC = () => {
           <div className="flex justify-center py-12">
             <LoadingSpinner />
           </div>
-        ) : recommendedJobs?.data && recommendedJobs.data.length > 0 ? (
+        ) : hasRecommendedJobs ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recommendedJobs.data.slice(0, 3).map(job => (
+            {recommendedJobs.data.jobs.slice(0, 3).map((job: any) => (
               <Link 
                 key={job.id} 
                 to={`/jobs/${job.id}`}

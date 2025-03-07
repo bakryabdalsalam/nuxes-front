@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Application, ApplicationStatus } from '../../types';
 import { applicationApi } from '../../services/api';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 import { Dialog } from '@headlessui/react';
+import { formatCompanyName } from '../../utils/formatters';
 
 export const ApplicationManager = () => {
   const queryClient = useQueryClient();
@@ -57,14 +58,16 @@ export const ApplicationManager = () => {
     PENDING: 'bg-yellow-100 text-yellow-800',
     REVIEWING: 'bg-blue-100 text-blue-800',
     ACCEPTED: 'bg-green-100 text-green-800',
-    REJECTED: 'bg-red-100 text-red-800'
+    REJECTED: 'bg-red-100 text-red-800',
+    SHORTLISTED: 'bg-purple-100 text-purple-800'
   };
 
   const statusLabels = {
     PENDING: 'Pending Review',
     REVIEWING: 'Under Review',
     ACCEPTED: 'Accepted',
-    REJECTED: 'Rejected'
+    REJECTED: 'Rejected',
+    SHORTLISTED: 'Shortlisted'
   };
 
   const handleStatusChange = async (id: string, newStatus: ApplicationStatus) => {
@@ -134,7 +137,7 @@ export const ApplicationManager = () => {
                         {application.job?.title}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {application.job?.company}
+                        {formatCompanyName(application.job?.company)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {format(new Date(application.createdAt), 'MMM dd, yyyy')}
@@ -215,7 +218,7 @@ export const ApplicationManager = () => {
                         <span className="font-medium">Position:</span> {selectedApplication.job?.title}
                       </p>
                       <p className="text-sm text-gray-900">
-                        <span className="font-medium">Company:</span> {selectedApplication.job?.company}
+                        <span className="font-medium">Company:</span> {formatCompanyName(selectedApplication.job?.company)}
                       </p>
                       <p className="text-sm text-gray-900">
                         <span className="font-medium">Location:</span> {selectedApplication.job?.location}

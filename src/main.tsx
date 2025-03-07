@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // Since they were causing errors with the wrong import
 
 // Remove console errors in development
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   const originalConsoleError = console.error;
   console.error = (...args) => {
     if (

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { jobsApi } from '../../services/api';
 import { JobCard } from './JobCard';
-import { LoadingSpinner } from '../common/LoadingSpinner';
 import { LoadingSkeleton } from '../common/LoadingSkeleton';
 import { AdvancedSearch } from './AdvancedSearch';
 import { Job, PaginatedResponse } from '../../types';
@@ -32,7 +31,14 @@ export const JobList: React.FC = () => {
   
   const { data, isLoading, isError } = useQuery<PaginatedResponse<Job[]>>({
     queryKey: ['jobs', page, filters],
-    queryFn: () => jobsApi.getJobs(page, filters),
+    queryFn: async () => {
+      const response = await jobsApi.getJobs(page, filters);
+      return {
+        success: response.success,
+        data: response.data.jobs,
+        pagination: response.data.pagination
+      };
+    },
     staleTime: 1000 * 60 * 5 // 5 minutes
   });
 

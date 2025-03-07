@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   EnvelopeIcon, 
@@ -11,8 +11,7 @@ import {
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 const Register: React.FC = () => {
-  const navigate = useNavigate();
-  const { register } = useAuth();
+  const { register: registerUser } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -43,7 +42,7 @@ const Register: React.FC = () => {
 
     try {
       const { confirmPassword, ...registerData } = formData;
-      await register(registerData);
+      await registerUser(registerData);
     } catch (err: any) {
       console.error('Registration error:', err);
       setError(err.response?.data?.message || 'Failed to create an account');

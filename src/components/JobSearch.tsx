@@ -1,27 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jobsApi } from '../services/api';
 import { 
   MagnifyingGlassIcon, 
   MapPinIcon, 
   BuildingOfficeIcon,
   AdjustmentsHorizontalIcon 
 } from '@heroicons/react/24/outline';
-
-interface Job {
-  id: string;
-  title: string;
-  company: {
-    companyName: string;
-    location: string;
-  };
-  location: string;
-  experienceLevel: string;
-  category: string;
-  salary: number;
-  remote: boolean;
-  createdAt: string;
-}
 
 interface JobSearchFilters {
   search: string;
@@ -43,7 +27,7 @@ export const JobSearch: React.FC<{ onSearch?: (filters: JobSearchFilters) => voi
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
     setFilters(prev => ({
@@ -52,7 +36,7 @@ export const JobSearch: React.FC<{ onSearch?: (filters: JobSearchFilters) => voi
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     
     if (onSearch) {

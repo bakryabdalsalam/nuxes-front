@@ -1,9 +1,8 @@
 import React from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { HiHome, HiBriefcase, HiDocument, HiUserCircle, HiChartBar } from 'react-icons/hi';
+import { NavLink, Outlet } from 'react-router-dom';
+import { HiHome, HiBriefcase, HiUserCircle, HiChartBar } from 'react-icons/hi';
 
 const CompanyLayout: React.FC = () => {
-  const location = useLocation();
 
   const navItems = [
     { path: '/company/dashboard', label: 'Dashboard', icon: HiHome },

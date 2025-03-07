@@ -1,7 +1,7 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { RegisterForm } from '../components/auth/RegisterForm';
-import { ErrorBoundary } from '../components/common/ErrorBoundary';
+import ErrorBoundary from '../components/common/ErrorBoundary';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
 
 export const RegisterPage = () => {

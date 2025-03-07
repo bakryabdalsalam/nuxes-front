@@ -1,67 +1,101 @@
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'USER' | 'ADMIN' | 'COMPANY';
+  isActive: boolean;
+  profile?: {
+    fullName: string;
+    bio?: string;
+    avatar?: string;
+  };
+  _count?: {
+    applications: number;
+  };
+}
+
 export interface Job {
   id: string;
   title: string;
   description: string;
-  company: string;
+  company: {
+    name?: string;
+    companyName?: string;
+  } | string;
   location: string;
-  experienceLevel: string;
-  category: string;
-  salary: number | null;
-  createdAt: string;
-  updatedAt: string;
+  salary?: {
+    min?: number;
+    max?: number;
+    currency?: string;
+  };
+  postedDate: string;
+  deadline?: string;
+  category?: string;
+  experienceLevel?: string;
+  employmentType?: string;
+  remote?: boolean;
+  skills?: string[];
+  logo?: string;
+  createdAt?: string;
+  updatedAt?: string;
   _count?: {
     applications: number;
   };
 }
-
-export type ApplicationStatus = 'PENDING' | 'REVIEWING' | 'ACCEPTED' | 'REJECTED';
 
 export interface Application {
   id: string;
-  jobId: string;
   userId: string;
+  jobId: string;
   status: ApplicationStatus;
-  resume: string | null;
-  coverLetter: string | null;
+  coverLetter: string;
+  resume: string;
+  submittedAt: string;
   createdAt: string;
-  updatedAt: string;
-  job: Job;
-  user: User;
+  updatedAt?: string;
+  user?: User;
+  job?: Job;
 }
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'USER' | 'ADMIN' | 'COMPANY';
-  isActive: boolean;
-  _count?: {
-    applications: number;
+export type ApplicationStatus = 'PENDING' | 'REVIEWING' | 'REJECTED' | 'SHORTLISTED' | 'ACCEPTED';
+
+export interface JobFilters {
+  search?: string;
+  location?: string;
+  category?: string;
+  experienceLevel?: string;
+  employmentType?: string;
+  remote?: boolean;
+  salary?: {
+    min?: number;
+    max?: number;
   };
+  keyword?: string;
 }
 
-export interface AuthResponse {
+export interface PaginatedResponse<T> {
   success: boolean;
-  data: {
-    user: User;
-    token: string;
+  data: T;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
   };
-  message?: string;
 }
 
 export interface ApiResponse<T> {
   success: boolean;
-  data: T;
+  data?: T;
   message?: string;
-  error?: string;
 }
 
-export interface PaginatedResponse<T> {
-  data: T;
-  pagination: {
-    total: number;
-    pages: number;
-    page: number;
-    limit: number;
+export interface AuthResponse {
+  success: boolean;
+  data?: {
+    user?: User;
+    token?: string;
   };
+  message?: string;
+  // Additional auth-specific properties if needed
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Line, Bar } from 'react-chartjs-2';
 import { analyticsApi } from '../../services/api';
@@ -56,11 +55,11 @@ export const DashboardCharts = () => {
   }
 
   const applicationsData = {
-    labels: analytics?.data?.applicationsByDay?.map(d => d.date) || [],
+    labels: analytics?.data?.applicationsByDay?.map((d: { date: string, count: number }) => d.date) || [],
     datasets: [
       {
         label: 'Applications',
-        data: analytics?.data?.applicationsByDay?.map(d => d.count) || [],
+        data: analytics?.data?.applicationsByDay?.map((d: { date: string, count: number }) => d.count) || [],
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192, 0.1)',
         tension: 0.1,
@@ -70,11 +69,11 @@ export const DashboardCharts = () => {
   };
 
   const jobsByCategory = {
-    labels: analytics?.data?.jobsByCategory?.map(d => d.category) || [],
+    labels: analytics?.data?.jobsByCategory?.map((d: { category: string, count: number }) => d.category) || [],
     datasets: [
       {
         label: 'Jobs by Category',
-        data: analytics?.data?.jobsByCategory?.map(d => d.count) || [],
+        data: analytics?.data?.jobsByCategory?.map((d: { category: string, count: number }) => d.count) || [],
         backgroundColor: [
           'rgba(54, 162, 235, 0.5)',
           'rgba(75, 192, 192, 0.5)',
@@ -144,7 +143,7 @@ export const DashboardCharts = () => {
         <h3 className="text-lg font-medium mb-4">Recent Activity</h3>
         <div className="flow-root">
           <ul role="list" className="-mb-8">
-            {analytics?.data?.recentActivity?.map((activity, activityIdx) => (
+            {analytics?.data?.recentActivity?.map((activity: any, activityIdx: number) => (
               <li key={activity.id}>
                 <div className="relative pb-8">
                   {activityIdx !== analytics.data.recentActivity.length - 1 ? (
