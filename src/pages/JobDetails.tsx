@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { jobsApi } from '../services/api'; // Use your API service
 import { useAuth } from '../context/AuthContext';
+import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
 interface Job {
   id: string;
@@ -53,29 +54,42 @@ const JobDetails: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!id) return;
+      
       try {
         setLoading(true);
-        const [jobRes, similarJobsRes] = await Promise.all([
-          axios.get(`/api/jobs/${id}`),
-          axios.get(`/api/jobs/${id}/similar`),
-        ]);
-        if (jobRes.data?.data) {
-          setJob(jobRes.data.data);
+        setError('');
+        
+        // Use the jobsApi instead of direct axios calls
+        const jobRes = await jobsApi.getJob(id);
+        console.log('Job response:', jobRes); // Debug logging
+        
+        if (jobRes.success && jobRes.data) {
+          setJob(jobRes.data);
+          
+          // Also fetch similar jobs if needed
+          try {
+            // You may need to create this method in your API service
+            const similarRes = await jobsApi.getSimilarJobs(id);
+            if (similarRes.success && similarRes.data) {
+              setSimilarJobs(similarRes.data);
+            }
+          } catch (err) {
+            console.warn('Error fetching similar jobs:', err);
+            // Don't set error here as we still have the main job data
+          }
+        } else {
+          throw new Error(jobRes.message || 'Failed to fetch job details');
         }
-        if (similarJobsRes.data?.data) {
-          setSimilarJobs(similarJobsRes.data.data);
-        }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching job details:', err);
-        setError('Failed to fetch job details');
+        setError(err.message || 'Failed to fetch job details');
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) {
-      fetchData();
-    }
+    fetchData();
   }, [id]);
 
   const handleApply = () => {

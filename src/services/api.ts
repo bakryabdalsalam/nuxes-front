@@ -250,8 +250,29 @@ export const jobsApi = {
   },
 
   getJob: async (id: string) => {
-    const response = await api.get(`jobs/${id}`);
-    return response.data;
+    try {
+      console.log('Fetching job with ID:', id); // Debug logging
+      const response = await api.get(`jobs/${id}`);
+      
+      // Check the response structure to ensure it matches expectations
+      console.log('Job API response:', response.data);
+      
+      return response.data;
+    } catch (error: any) {
+      console.error('Error in getJob:', error);
+      // More informative error
+      throw new Error(error.response?.data?.message || error.message || 'Failed to fetch job details');
+    }
+  },
+
+  getSimilarJobs: async (id: string) => {
+    try {
+      const response = await api.get(`jobs/${id}/similar`);
+      return response.data;
+    } catch (error: any) {
+      console.error('Error in getSimilarJobs:', error);
+      throw new Error('Failed to fetch similar jobs');
+    }
   },
 
   createJob: async (jobData: Partial<Job>) => {
